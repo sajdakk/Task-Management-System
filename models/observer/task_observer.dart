@@ -12,7 +12,7 @@ class TaskObserver implements TaskObserverInterface {
     var file = File(fileName);
     var tasksText = tasks.map((task) {
       return task.toString();
-    }).join();
+    }).join('\n');
 
     try {
       file.writeAsStringSync(tasksText);

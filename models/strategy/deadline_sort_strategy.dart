@@ -12,11 +12,11 @@ class DeadlineSortStrategy implements TaskSortStrategy {
       var deadlineB = (b is DeadlineDecorator) ? (b).deadline : null;
 
       if (deadlineA != null && deadlineB != null) {
-        return deadlineA.compareTo(deadlineB);
+        return -deadlineA.compareTo(deadlineB);
       } else if (deadlineA != null) {
-        return 1; // A has a deadline, so it should come after B
+        return -1; // A has a deadline, so it should come after B
       } else if (deadlineB != null) {
-        return -1; // B has a deadline, so it should come before A
+        return 1; // B has a deadline, so it should come before A
       } else {
         return 0; // Neither A nor B has a deadline
       }

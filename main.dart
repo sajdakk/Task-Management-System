@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'models/observer/task_observer.dart';
+import 'models/priority/priority.dart';
 import 'models/state/done_state.dart';
 import 'models/state/in_progress_state.dart';
 import 'models/state/to_do_state.dart';
+import 'models/strategy/deadline_sort_strategy.dart';
+import 'models/strategy/priority_sort_strategy.dart';
 import 'models/task.dart';
-import 'task_manager.dart';
+import 'managers/task_manager.dart';
 
 void main() {
   var taskManager = TaskManager();
@@ -17,9 +20,12 @@ void main() {
     print("1. Create Task");
     print("2. Display Tasks");
     print("3. Change Task Status");
-    print("4. Exit");
+    print("4. Change Sort Type");
+    print("5. Change Task Priority");
+    print("6. Add Deadline to Task");
+    print("7. Exit");
 
-    var choice = int.parse(stdin.readLineSync()!);
+    var choice = int.tryParse(stdin.readLineSync()!);
 
     switch (choice) {
       case 1:
@@ -32,6 +38,15 @@ void main() {
         changeTaskStatus(taskManager);
         break;
       case 4:
+        changeSortType(taskManager);
+        break;
+      case 5:
+        changeTaskPriority(taskManager);
+        break;
+      case 6:
+        addDeadlineToTask(taskManager);
+        break;
+      case 7:
         exit(0);
       default:
         print("Invalid choice. Please choose again.");
@@ -69,13 +84,13 @@ void changeTaskStatus(TaskManager taskManager) {
 
     switch (statusChoice) {
       case 1:
-        task.setState(ToDoState());
+        taskManager.changeTaskStatus(task, ToDoState());
         break;
       case 2:
-        task.setState(InProgressState());
+        taskManager.changeTaskStatus(task, InProgressState());
         break;
       case 3:
-        task.setState(DoneState());
+        taskManager.changeTaskStatus(task, DoneState());
         break;
       default:
         print("Invalid status choice.");
@@ -83,6 +98,96 @@ void changeTaskStatus(TaskManager taskManager) {
     }
 
     print("Task status updated successfully!");
+  } else {
+    print("Invalid index. Please choose a valid index.");
+  }
+}
+
+void changeSortType(TaskManager taskManager) {
+  print("Choose a sort type:");
+  print("1. Priority Sort");
+  print("2. Deadline Sort");
+
+  var choice = int.parse(stdin.readLineSync()!);
+
+  switch (choice) {
+    case 1:
+      taskManager.changeSortStrategy(PrioritySortStrategy());
+      print("Sort type changed to Priority Sort");
+      break;
+    case 2:
+      taskManager.changeSortStrategy(DeadlineSortStrategy());
+      print("Sort type changed to Deadline Sort");
+      break;
+    default:
+      print("Invalid sort type choice.");
+  }
+}
+
+void changeTaskPriority(TaskManager taskManager) {
+  if (taskManager.tasks.isEmpty) {
+    print("No tasks available. Create a task first.");
+    return;
+  }
+
+  taskManager.printTasks();
+
+  print("Enter the index of the task to change its priority:");
+  var index = int.parse(stdin.readLineSync()!);
+
+  if (index >= 0 && index < taskManager.tasks.length) {
+    var task = taskManager.tasks[index];
+    print("Choose new priority:");
+    print("1. Low");
+    print("2. Medium");
+    print("3. High");
+
+    var priorityChoice = int.parse(stdin.readLineSync()!);
+
+    switch (priorityChoice) {
+      case 1:
+        taskManager.applyPriorityDecorator(task, Priority.low);
+        break;
+      case 2:
+        taskManager.applyPriorityDecorator(task, Priority.medium);
+        break;
+      case 3:
+        taskManager.applyPriorityDecorator(task, Priority.high);
+        break;
+      default:
+        print("Invalid priority choice.");
+        return;
+    }
+
+    print("Task priority updated successfully!");
+  } else {
+    print("Invalid index. Please choose a valid index.");
+  }
+}
+
+void addDeadlineToTask(TaskManager taskManager) {
+  if (taskManager.tasks.isEmpty) {
+    print("No tasks available. Create a task first.");
+    return;
+  }
+
+  taskManager.printTasks();
+
+  print("Enter the index of the task to add a deadline:");
+  var index = int.parse(stdin.readLineSync()!);
+
+  if (index >= 0 && index < taskManager.tasks.length) {
+    var task = taskManager.tasks[index];
+    print("Enter the deadline (yyyy-mm-dd):");
+    var deadlineString = stdin.readLineSync()!;
+    DateTime? deadline = DateTime.tryParse(deadlineString);
+    if (deadline == null) {
+      print("Invalid date format. Please enter a valid date.");
+      return;
+    }
+
+    taskManager.applyDeadlineDecorator(task, deadline);
+    print("Deadline added to the task successfully!");
   } else {
     print("Invalid index. Please choose a valid index.");
   }
