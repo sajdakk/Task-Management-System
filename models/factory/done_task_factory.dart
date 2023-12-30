@@ -6,7 +6,7 @@ class DoneTaskTypeFactory extends TaskFactory {
   @override
   Task createTask(String description) {
     return Task(
-      description,
+      description: description,
       state: DoneState(),
     );
   }

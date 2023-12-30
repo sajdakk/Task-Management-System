@@ -1,3 +1,5 @@
+import '../helpers/stack.dart';
+import '../models/momento/task_momento.dart';
 import '../models/strategy/task_sort_context.dart';
 import '../extensions/list_extensions.dart';
 import '../models/decorator/deadline_decorator.dart';
@@ -13,11 +15,15 @@ class TaskManager {
   late List<Task> tasks;
   late TaskSortContext sortContext;
   late List<TaskObserverInterface> observers;
+  late Stack<TaskMemento> undoStack;
+  late Stack<TaskMemento> redoStack;
 
   TaskManager() {
     tasks = [];
     sortContext = TaskSortContext(PrioritySortStrategy());
     observers = [];
+    undoStack = Stack<TaskMemento>();
+    redoStack = Stack<TaskMemento>();
   }
 
   void addObserver(TaskObserverInterface observer) {
@@ -32,7 +38,8 @@ class TaskManager {
 
   void addTask(Task task) {
     tasks.add(task);
-    sortTasks();
+    _sortTasks();
+    _saveTasksState();
 
     notifyObservers();
   }
@@ -46,7 +53,8 @@ class TaskManager {
     updatedTask = PriorityDecorator(task, priority);
     tasks.remove(task);
     tasks.add(updatedTask);
-    sortTasks();
+    _sortTasks();
+    _saveTasksState();
     notifyObservers();
   }
 
@@ -59,7 +67,8 @@ class TaskManager {
     updatedTask = DeadlineDecorator(task, deadline);
     tasks.remove(task);
     tasks.add(updatedTask);
-    sortTasks();
+    _sortTasks();
+    _saveTasksState();
 
     notifyObservers();
   }
@@ -73,24 +82,64 @@ class TaskManager {
     updatedTask.setState(state);
     tasks.remove(task);
     tasks.add(updatedTask);
-    sortTasks();
+    _sortTasks();
+    _saveTasksState();
 
     notifyObservers();
   }
 
   void changeSortStrategy(TaskSortStrategy strategy) {
     sortContext.setSortStrategy(strategy);
-    sortTasks();
+    _sortTasks();
+    _saveTasksState();
     notifyObservers();
   }
 
-  void sortTasks() {
+  void _sortTasks() {
     tasks = sortContext.executeStrategy(tasks);
   }
 
   void printTasks() {
     for (int i = 0; i < tasks.length; i++) {
       print("$i. " + tasks[i].toString());
+    }
+  }
+
+  void _saveTasksState() {
+    var currentSnapshot = TaskMemento("Snapshot", tasks.toList());
+
+    undoStack.push(currentSnapshot);
+
+    redoStack.clear(); // Clear redo stack when a new state is saved
+  }
+
+  void undo() {
+    if (undoStack.isNotEmpty) {
+      TaskMemento last = undoStack.pop();
+      redoStack.push(last);
+
+      if (undoStack.isEmpty) {
+        tasks.clear();
+
+        return;
+      }
+
+      tasks.clear();
+      tasks.addAll(undoStack.peek().state.toList());
+    } else {
+      tasks.clear();
+    }
+  }
+
+  void redo() {
+    if (redoStack.isNotEmpty) {
+      TaskMemento last = redoStack.pop();
+      undoStack.push(last);
+
+      tasks.clear();
+      tasks.addAll(last.state.toList());
+    } else {
+      print("Nothing to redo.");
     }
   }
 }

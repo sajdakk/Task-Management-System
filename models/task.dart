@@ -1,10 +1,15 @@
+import 'momento/task_momento.dart';
 import 'state/task_state.dart';
 
 class Task {
   late String description;
   late TaskState state;
 
-  Task(this.description, {required this.state});
+  Task(
+   {
+    required this.state,
+    required this.description,
+  });
 
   // Method to handle status changes using the current state
   void changeStatus() {

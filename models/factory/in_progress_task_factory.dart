@@ -6,7 +6,7 @@ class InProgressTaskTypeFactory extends TaskFactory {
   @override
   Task createTask(String description) {
     return Task(
-      description,
+      description: description,
       state: InProgressState(),
     );
   }

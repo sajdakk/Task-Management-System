@@ -23,7 +23,9 @@ void main() {
     print("4. Change Sort Type");
     print("5. Change Task Priority");
     print("6. Add Deadline to Task");
-    print("7. Exit");
+    print("7. Undo");
+    print("8. Redo");
+    print("9. Exit");
 
     var choice = int.tryParse(stdin.readLineSync()!);
 
@@ -47,6 +49,12 @@ void main() {
         addDeadlineToTask(taskManager);
         break;
       case 7:
+        taskManager.undo();
+        break;
+      case 8:
+        taskManager.redo();
+        break;
+      case 9:
         exit(0);
       default:
         print("Invalid choice. Please choose again.");
@@ -57,7 +65,10 @@ void main() {
 void createTask(TaskManager taskManager) {
   print("Enter task description:");
   var description = stdin.readLineSync()!;
-  var task = Task(description, state: ToDoState());
+  var task = Task(
+    description: description,
+    state: ToDoState(),
+  );
   taskManager.addTask(task);
   print("Task created successfully!");
 }

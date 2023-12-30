@@ -4,7 +4,7 @@ import '../task.dart';
 abstract class TaskDecorator extends Task {
   TaskDecorator(Task task)
       : super(
-          task.description,
+          description: task.description,
           state: task.state,
         );
 
