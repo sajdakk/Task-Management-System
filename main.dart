@@ -57,10 +57,29 @@ void main() {
 void createTask(TaskManager taskManager) {
   print("Enter task description:");
   var description = stdin.readLineSync()!;
-  var task = Task(
-    description: description,
-    state: ToDoState(),
-  );
+  print("Enter initial status (please enter index):");
+  print("Choose new status:");
+  print("1. To Do");
+  print("2. In Progress");
+  print("3. Done");
+
+  var status = int.parse(stdin.readLineSync()!);
+  var task;
+  switch (status) {
+    case 1:
+      task = ToDoTaskTypeFactory().createTask(description);
+      break;
+    case 2:
+      task = InProgressTaskTypeFactory().createTask(description);
+      break;
+    case 3:
+      task = DoneTaskTypeFactory().createTask(description);
+      break;
+    default:
+      print("Invalid status choice.");
+      return;
+  }
+
   taskManager.addTask(task);
   print("Task created successfully!");
 }
