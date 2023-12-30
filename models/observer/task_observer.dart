@@ -1,6 +1,6 @@
-import '../task.dart';
-import 'task_observer_interface.dart';
 import 'dart:io';
+
+import '../../_project.dart';
 
 class TaskObserver implements TaskObserverInterface {
   TaskObserver(this.fileName);

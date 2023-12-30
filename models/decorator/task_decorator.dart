@@ -1,9 +1,11 @@
-// Decorator pattern
-import '../task.dart';
+import '../../_project.dart';
 
 abstract class TaskDecorator extends Task {
+  Task task;
+
   TaskDecorator(Task task)
-      : super(
+      : task = task,
+        super(
           description: task.description,
           state: task.state,
         );

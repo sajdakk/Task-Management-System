@@ -1,6 +1,4 @@
-import '../state/done_state.dart';
-import '../task.dart';
-import 'task_factory.dart';
+import '../../_project.dart';
 
 class DoneTaskTypeFactory extends TaskFactory {
   @override

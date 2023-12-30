@@ -1,2 +1,8 @@
-Task: Make a bed 
+Task: clean dishes 
+	 Status: To Do
+	 Deadline: 2024-12-12 00:00:00.000
+Task: clean room 
+	 Status: To Do
+	 Priority: High
+Task: make a wish 
 	 Status: To Do

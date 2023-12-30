@@ -1,5 +1,4 @@
-// Observer pattern
-import '../task.dart';
+import '../../_project.dart';
 
 abstract class TaskObserverInterface {
   void update(List<Task> tasks);

@@ -1,7 +1,4 @@
-import '../priority/priority.dart';
-import '../priority/priority_mapper.dart';
-import '../task.dart';
-import 'task_decorator.dart';
+import '../../_project.dart';
 
 class PriorityDecorator extends TaskDecorator {
   late Priority priority;
@@ -10,6 +7,12 @@ class PriorityDecorator extends TaskDecorator {
     Task task,
     this.priority,
   ) : super(task);
+
+  @override
+  Task copy() => PriorityDecorator(
+        super.task,
+        priority,
+      );
 
   @override
   String toString() {

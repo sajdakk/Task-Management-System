@@ -1,15 +1,4 @@
-import '../helpers/stack.dart';
-import '../models/momento/task_momento.dart';
-import '../models/strategy/task_sort_context.dart';
-import '../extensions/list_extensions.dart';
-import '../models/decorator/deadline_decorator.dart';
-import '../models/decorator/priority_decorator.dart';
-import '../models/observer/task_observer_interface.dart';
-import '../models/priority/priority.dart';
-import '../models/state/task_state.dart';
-import '../models/strategy/priority_sort_strategy.dart';
-import '../models/strategy/task_sort_strategy.dart';
-import '../models/task.dart';
+import '../_project.dart';
 
 class TaskManager {
   late List<Task> tasks;
@@ -106,7 +95,7 @@ class TaskManager {
   }
 
   void _saveTasksState() {
-    var currentSnapshot = TaskMemento("Snapshot", tasks.toList());
+    var currentSnapshot = TaskMemento("Snapshot", tasks.map((e) => e.copy()).toList());
 
     undoStack.push(currentSnapshot);
 

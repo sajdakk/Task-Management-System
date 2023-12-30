@@ -1,6 +1,4 @@
-// Strategy pattern for task sorting
-import 'task_sort_strategy.dart';
-import '../task.dart';
+import '../../_project.dart';
 
 class TaskSortContext {
   late TaskSortStrategy strategy;

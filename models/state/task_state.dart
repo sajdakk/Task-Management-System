@@ -1,5 +1,4 @@
-// State pattern for task status
-import '../task.dart';
+import '../../_project.dart';
 
 abstract class TaskState {
   void handleStatus(Task task);

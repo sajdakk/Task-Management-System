@@ -1,5 +1,4 @@
-// Factory pattern
-import '../task.dart';
+import '../../_project.dart';
 
 abstract class TaskFactory {
   Task createTask(String description);

@@ -1,7 +1,4 @@
-// Strategy pattern for task sorting
-import '../decorator/deadline_decorator.dart';
-import '../task.dart';
-import 'task_sort_strategy.dart';
+import '../../_project.dart';
 
 class DeadlineSortStrategy implements TaskSortStrategy {
   @override

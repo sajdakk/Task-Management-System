@@ -1,7 +1,4 @@
-import '../decorator/priority_decorator.dart';
-import '../priority/priority_mapper.dart';
-import '../task.dart';
-import 'task_sort_strategy.dart';
+import '../../_project.dart';
 
 class PrioritySortStrategy extends TaskSortStrategy {
   @override

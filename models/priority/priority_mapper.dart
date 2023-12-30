@@ -1,4 +1,4 @@
-import 'priority.dart';
+import '../../_project.dart';
 
 class PriorityMapper {
   static String getName(Priority priority) {

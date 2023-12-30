@@ -1,5 +1,4 @@
-import '../task.dart';
-import 'task_state.dart';
+import '../../_project.dart';
 
 class DoneState implements TaskState {
   @override

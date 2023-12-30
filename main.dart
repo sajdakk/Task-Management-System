@@ -1,14 +1,6 @@
 import 'dart:io';
 
-import 'models/observer/task_observer.dart';
-import 'models/priority/priority.dart';
-import 'models/state/done_state.dart';
-import 'models/state/in_progress_state.dart';
-import 'models/state/to_do_state.dart';
-import 'models/strategy/deadline_sort_strategy.dart';
-import 'models/strategy/priority_sort_strategy.dart';
-import 'models/task.dart';
-import 'managers/task_manager.dart';
+import '_project.dart';
 
 void main() {
   var taskManager = TaskManager();

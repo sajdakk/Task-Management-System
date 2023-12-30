@@ -1,12 +1,10 @@
-import 'momento/task_momento.dart';
-import 'state/task_state.dart';
+import '../../_project.dart';
 
-class Task {
+class Task implements TaskInterface {
   late String description;
   late TaskState state;
 
-  Task(
-   {
+  Task({
     required this.state,
     required this.description,
   });
@@ -21,6 +19,11 @@ class Task {
     state = newState;
     changeStatus();
   }
+
+  Task copy() => Task(
+        state: state,
+        description: description,
+      );
 
   @override
   String toString() {
