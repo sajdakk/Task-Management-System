@@ -7,12 +7,22 @@ class TaskManager {
   late Stack<TaskMemento> undoStack;
   late Stack<TaskMemento> redoStack;
 
-  TaskManager() {
+  static TaskManager? _instance;
+
+  TaskManager._internal() {
     tasks = [];
     sortContext = TaskSortContext(PrioritySortStrategy());
     observers = [];
     undoStack = Stack<TaskMemento>();
     redoStack = Stack<TaskMemento>();
+  }
+
+  factory TaskManager() {
+    if (_instance == null) {
+      _instance = TaskManager._internal();
+    }
+
+    return _instance!;
   }
 
   void addObserver(TaskObserverInterface observer) {
