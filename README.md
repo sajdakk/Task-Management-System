@@ -1,4 +1,4 @@
-# Dart Task Management Project
+# Task Management System
 
 This Dart project is a simple console-based task management application that demonstrates the use of design patterns such as the Memento pattern for undo/redo functionality and various other design principles.
 
