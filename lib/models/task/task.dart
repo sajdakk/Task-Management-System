@@ -57,7 +57,7 @@ class Task implements TaskInterface {
       "description": description,
       "state": state.index,
       if (deadline != null) "deadline": deadline!.toIso8601String(),
-      if (priority != null) "priority": priority!.index,
+      if (priority != null) "priority": priority!.name,
     };
   }
 
