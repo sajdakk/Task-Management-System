@@ -14,4 +14,6 @@ abstract class TaskInterface {
 
   @override
   String toString();
+
+  Map<String, dynamic> toJson();
 }

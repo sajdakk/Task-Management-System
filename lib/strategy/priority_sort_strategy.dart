@@ -1,25 +1,25 @@
-import '../../_project.dart';
+import '../_project.dart';
 
-class DeadlineSortStrategy implements TaskSortStrategy {
+class PrioritySortStrategy extends TaskSortStrategy {
   @override
   List<TaskInterface> sortTasks(List<TaskInterface> tasks) {
     tasks.sort((a, b) {
-      if (a is DeadlineDecorator && b is DeadlineDecorator) {
+      if (a is PriorityDecorator && b is PriorityDecorator) {
         // Compare the two tasks by their state and priority
-        DateTime deadlineA = a.deadline;
-        DateTime deadlineB = b.deadline;
+        final int priorityAIndex = PriorityMapper.getIndex(a.priority);
+        final int priorityBIndex = PriorityMapper.getIndex(b.priority);
 
-        if (deadlineA == deadlineB) {
+        if (priorityAIndex == priorityBIndex) {
           final int stateAIndex = a.state.index;
           final int stateBIndex = b.state.index;
 
           return stateAIndex.compareTo(stateBIndex);
         }
 
-        return deadlineA.compareTo(deadlineB);
+        return -priorityAIndex.compareTo(priorityBIndex);
       }
 
-      if (a is! DeadlineDecorator && b is! DeadlineDecorator) {
+      if (a is! PriorityDecorator && b is! PriorityDecorator) {
         // Compare the two tasks by their state
         final int stateAIndex = a.state.index;
         final int stateBIndex = b.state.index;
@@ -27,11 +27,11 @@ class DeadlineSortStrategy implements TaskSortStrategy {
         return stateAIndex.compareTo(stateBIndex);
       }
 
-      if (a is DeadlineDecorator) {
+      if (a is PriorityDecorator) {
         return -1;
       }
 
-      if (b is DeadlineDecorator) {
+      if (b is PriorityDecorator) {
         return 1;
       }
 
@@ -42,5 +42,5 @@ class DeadlineSortStrategy implements TaskSortStrategy {
   }
 
   @override
-  String get name => "Deadline";
+  String get name => "Priority";
 }

@@ -107,7 +107,13 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                               context: context,
                               initialDeadline: task is DeadlineDecorator ? task.deadline : null,
                               onConfirm: (DateTime deadline) {
-                                TaskManager().applyDeadlineDecorator(tasks[index], deadline);
+                                if (task is DeadlineDecorator) {
+                                  TaskManager().changeDeadlineDecorator(task, deadline);
+
+                                  return;
+                                }
+
+                                TaskManager().applyDeadlineDecorator(task, deadline);
                               },
                             ),
                             size: ThPrimaryButtonSize.small,
@@ -118,8 +124,15 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                             title: 'Change priority',
                             onTap: () => ChangePriorityDialog.show(
                               context: context,
+                              initialPriority: task is PriorityDecorator ? task.priority : null,
                               onConfirm: (Priority priority) {
-                                TaskManager().applyPriorityDecorator(tasks[index], priority);
+                                if (task is PriorityDecorator) {
+                                  TaskManager().changePriorityDecorator(task, priority);
+
+                                  return;
+                                }
+
+                                TaskManager().applyPriorityDecorator(task, priority);
                               },
                             ),
                             size: ThPrimaryButtonSize.small,
@@ -127,6 +140,7 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                           ),
                           const SizedBox(width: 8.0),
                           DropdownMenu<int>(
+                            key: ValueKey<String>(tasks[index].description),
                             enableFilter: false,
                             requestFocusOnTap: true,
                             leadingIcon: const Icon(Icons.search),
@@ -173,6 +187,12 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                                 );
                               },
                             ).toList(),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              TaskManager().removeTask(tasks[index]);
+                            },
+                            icon: const Icon(Icons.delete),
                           ),
                         ],
                       ),

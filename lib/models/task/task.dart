@@ -1,7 +1,9 @@
 import '../../_project.dart';
 
 class Task implements TaskInterface {
+  @override
   late String description;
+  @override
   late TaskState state;
 
   Task({
@@ -31,5 +33,26 @@ class Task implements TaskInterface {
   @override
   String toString() {
     return "Task: $description \n\t Status: $state";
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "description": description,
+      "state": state.index,
+    };
+  }
+
+  factory Task.fromJson(Map<String, dynamic> json) {
+    TaskState? state = TaskStateFactory().build(json["state"]);
+    String description = json["description"];
+    if (state == null) {
+      throw Exception("Invalid state");
+    }
+
+    return Task(
+      state: state,
+      description: description,
+    );
   }
 }

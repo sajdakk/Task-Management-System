@@ -1,4 +1,4 @@
-import '../../_project.dart';
+import '../_project.dart';
 
 abstract class TaskSortStrategy {
   List<TaskInterface> sortTasks(List<TaskInterface> tasks);

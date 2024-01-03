@@ -3,7 +3,6 @@ import '../../_project.dart';
 class InProgressState implements TaskState {
   @override
   void handleStatus(Task task) {
-    print("Task is in progress");
   }
 
   @override

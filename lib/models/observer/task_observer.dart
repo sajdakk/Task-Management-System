@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
@@ -17,13 +18,9 @@ class TaskObserver implements TaskObserverInterface {
     final String filePath = path.join(downloadsDir.path, fileName);
 
     var file = File(filePath);
-    var tasksText = tasks.map((task) {
-      return task.toString();
-    }).join('\n');
-
+    var tasksText = jsonEncode(tasks);
     try {
       file.writeAsStringSync(tasksText);
-      TmMessage.showInfo('Tasks saved to downloads dir: $filePath');
     } catch (e) {
       TmMessage.showError('Error saving tasks to file: $e');
     }

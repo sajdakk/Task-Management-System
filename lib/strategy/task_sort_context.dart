@@ -1,4 +1,4 @@
-import '../../_project.dart';
+import '../_project.dart';
 
 class TaskSortContext {
   late TaskSortStrategy strategy;

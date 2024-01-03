@@ -1,3 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:project/helpers/task_json_parser.dart';
+
 import '../_project.dart';
 
 class TaskManager {
@@ -6,13 +13,37 @@ class TaskManager {
   late List<TaskObserverInterface> observers;
   late Stack<TaskMemento> undoStack;
   late Stack<TaskMemento> redoStack;
+  List<TaskInterface> _initialState = [];
 
   static TaskManager? _instance;
 
   TaskManager._internal() {
     tasks = [];
+
     sortContext = TaskSortContext(PrioritySortStrategy());
     observers = [];
+    undoStack = Stack<TaskMemento>();
+    redoStack = Stack<TaskMemento>();
+  }
+
+  Future<void> init(String fileName) async {
+    final Directory downloadsDir = await getApplicationDocumentsDirectory();
+    final File file = File(path.join(downloadsDir.path, fileName));
+    if (file.existsSync()) {
+      final String fileContent = file.readAsStringSync();
+      final List<dynamic> parsed = jsonDecode(fileContent);
+      tasks = parsed
+          .map(
+            (e) => TaskJsonParser.parse(e),
+          )
+          .toList();
+
+      _initialState = tasks.toList();
+    }
+
+    _sortTasks();
+
+    notifyObservers();
     undoStack = Stack<TaskMemento>();
     redoStack = Stack<TaskMemento>();
   }
@@ -45,6 +76,14 @@ class TaskManager {
     notifyObservers();
   }
 
+  void removeTask(TaskInterface task) {
+    tasks.remove(task);
+    _sortTasks();
+    _saveTasksState();
+
+    notifyObservers();
+  }
+
   void applyPriorityDecorator(TaskInterface task, Priority priority) {
     TaskInterface? updatedTask = tasks.firstWhereOrNull((element) => element == task);
     if (updatedTask == null) {
@@ -59,6 +98,28 @@ class TaskManager {
     notifyObservers();
   }
 
+  void changePriorityDecorator(TaskInterface task, Priority priority) {
+    if (task is! PriorityDecorator) {
+      return;
+    }
+
+    TaskInterface? updatedTask = tasks.firstWhereOrNull((element) => element == task);
+    if (updatedTask == null) {
+      return;
+    }
+
+    if (updatedTask is! PriorityDecorator) {
+      return;
+    }
+
+    updatedTask.priority = priority;
+    tasks.remove(task);
+    tasks.add(updatedTask);
+    _sortTasks();
+    _saveTasksState();
+    notifyObservers();
+  }
+
   void applyDeadlineDecorator(TaskInterface task, DateTime deadline) {
     TaskInterface? updatedTask = tasks.firstWhereOrNull((element) => element == task);
     if (updatedTask == null) {
@@ -66,6 +127,29 @@ class TaskManager {
     }
 
     updatedTask = DeadlineDecorator(task, deadline);
+    tasks.remove(task);
+    tasks.add(updatedTask);
+    _sortTasks();
+    _saveTasksState();
+
+    notifyObservers();
+  }
+
+  void changeDeadlineDecorator(TaskInterface task, DateTime deadline) {
+    if (task is! DeadlineDecorator) {
+      return;
+    }
+
+    TaskInterface? updatedTask = tasks.firstWhereOrNull((element) => element == task);
+    if (updatedTask == null) {
+      return;
+    }
+
+    if (updatedTask is! DeadlineDecorator) {
+      return;
+    }
+
+    updatedTask.deadline = deadline;
     tasks.remove(task);
     tasks.add(updatedTask);
     _sortTasks();
@@ -123,7 +207,8 @@ class TaskManager {
       redoStack.push(last);
 
       if (undoStack.isEmpty) {
-        tasks.clear();
+        tasks = _initialState.toList();
+        notifyObservers();
 
         return;
       }
@@ -131,7 +216,7 @@ class TaskManager {
       tasks.clear();
       tasks.addAll(undoStack.peek().state.toList());
     } else {
-      tasks.clear();
+      TmMessage.showInfo("Nothing to undo");
     }
 
     notifyObservers();

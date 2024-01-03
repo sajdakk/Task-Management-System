@@ -10,4 +10,10 @@ abstract class ThColors {
   static const Color statusColorInfo = Color(0xff48b5f7);
   static const Color statusColorDanger = Color(0xffe38c87);
   static const Color backgroundBG1 = Color(0xff6979BA);
+  static const Color elementsButtonSecondaryText = Colors.white;
+  static const Color textFormBg = Color.fromRGBO(255, 255, 255, 0.05);
+  static const Color backgroundBG2 = Color(0xff9AABEF);
+  static const Color elementsButtonSecondaryBackground = Color.fromRGBO(255, 255, 255, 0.1);
+  static const Color textText3 = Color.fromRGBO(255, 255, 255, 0.5);
+
 }

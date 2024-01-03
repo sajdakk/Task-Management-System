@@ -22,4 +22,6 @@ abstract class TaskDecorator implements TaskInterface {
   TaskInterface copy() {
     return task.copy();
   }
+
+  TaskDecorator copyWith(TaskInterface task);
 }

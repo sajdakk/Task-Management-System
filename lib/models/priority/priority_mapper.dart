@@ -14,7 +14,7 @@ class PriorityMapper {
     }
   }
 
-  static int getPriority(String priority) {
+  static int getPriorityIndex(String priority) {
     switch (priority) {
       case "Low":
         return 1;
@@ -24,6 +24,19 @@ class PriorityMapper {
         return 3;
       default:
         return 0;
+    }
+  }
+
+  static Priority? getPriority(String priority) {
+    switch (priority) {
+      case "Low":
+        return Priority.low;
+      case "Medium":
+        return Priority.medium;
+      case "High":
+        return Priority.high;
+      default:
+        return null;
     }
   }
 
