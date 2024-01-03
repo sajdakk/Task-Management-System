@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                             requestFocusOnTap: true,
                             leadingIcon: const Icon(Icons.search),
                             initialSelection: _tasks[index].state.index,
-                            label: const Text('Initial state'),
+                            label: const Text('State'),
                             inputDecorationTheme: const InputDecorationTheme(
                               filled: true,
                               contentPadding: EdgeInsets.symmetric(vertical: 5.0),
