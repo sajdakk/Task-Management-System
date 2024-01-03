@@ -1,4 +1,3 @@
-export 'decorator/_decorator.dart';
 export 'momento/_momento.dart';
 export 'task/_task.dart';
 export 'observer/_observer.dart';

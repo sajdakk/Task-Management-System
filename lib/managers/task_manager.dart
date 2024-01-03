@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import 'package:project/helpers/task_json_parser.dart';
 
 import '../_project.dart';
 
@@ -34,8 +33,9 @@ class TaskManager {
       final List<dynamic> parsed = jsonDecode(fileContent);
       tasks = parsed
           .map(
-            (e) => TaskJsonParser.parse(e),
+            (e) => Task.fromJson(e),
           )
+          .cast<TaskInterface>()
           .toList();
 
       _initialState = tasks.toList();
@@ -84,34 +84,12 @@ class TaskManager {
     notifyObservers();
   }
 
-  void applyPriorityDecorator(TaskInterface task, Priority priority) {
+  void addPriority(TaskInterface task, Priority priority) {
     TaskInterface? updatedTask = tasks.firstWhereOrNull((element) => element == task);
     if (updatedTask == null) {
       return;
     }
-
-    updatedTask = PriorityDecorator(task, priority);
-    tasks.remove(task);
-    tasks.add(updatedTask);
-    _sortTasks();
-    _saveTasksState();
-    notifyObservers();
-  }
-
-  void changePriorityDecorator(TaskInterface task, Priority priority) {
-    if (task is! PriorityDecorator) {
-      return;
-    }
-
-    TaskInterface? updatedTask = tasks.firstWhereOrNull((element) => element == task);
-    if (updatedTask == null) {
-      return;
-    }
-
-    if (updatedTask is! PriorityDecorator) {
-      return;
-    }
-
+    updatedTask = updatedTask.copy();
     updatedTask.priority = priority;
     tasks.remove(task);
     tasks.add(updatedTask);
@@ -120,35 +98,13 @@ class TaskManager {
     notifyObservers();
   }
 
-  void applyDeadlineDecorator(TaskInterface task, DateTime deadline) {
+  void addDeadline(TaskInterface task, DateTime deadline) {
     TaskInterface? updatedTask = tasks.firstWhereOrNull((element) => element == task);
     if (updatedTask == null) {
       return;
     }
 
-    updatedTask = DeadlineDecorator(task, deadline);
-    tasks.remove(task);
-    tasks.add(updatedTask);
-    _sortTasks();
-    _saveTasksState();
-
-    notifyObservers();
-  }
-
-  void changeDeadlineDecorator(TaskInterface task, DateTime deadline) {
-    if (task is! DeadlineDecorator) {
-      return;
-    }
-
-    TaskInterface? updatedTask = tasks.firstWhereOrNull((element) => element == task);
-    if (updatedTask == null) {
-      return;
-    }
-
-    if (updatedTask is! DeadlineDecorator) {
-      return;
-    }
-
+    updatedTask = updatedTask.copy();
     updatedTask.deadline = deadline;
     tasks.remove(task);
     tasks.add(updatedTask);
@@ -164,6 +120,7 @@ class TaskManager {
       return;
     }
 
+    updatedTask = updatedTask.copy();
     updatedTask.setState(state);
     tasks.remove(task);
     tasks.add(updatedTask);
@@ -176,7 +133,7 @@ class TaskManager {
   void changeSortStrategy(TaskSortStrategy strategy) {
     sortContext.setSortStrategy(strategy);
     _sortTasks();
-    _saveTasksState();
+    // _saveTasksState();
     notifyObservers();
   }
 
@@ -196,7 +153,7 @@ class TaskManager {
   void _saveTasksState() {
     var currentSnapshot = TaskMemento("Snapshot", tasks.map((e) => e.copy()).toList());
 
-    undoStack.push(currentSnapshot);
+    undoStack.push(currentSnapshot.copy());
 
     redoStack.clear(); // Clear redo stack when a new state is saved
   }
@@ -204,10 +161,11 @@ class TaskManager {
   void undo() {
     if (undoStack.isNotEmpty) {
       TaskMemento last = undoStack.pop();
-      redoStack.push(last);
+      redoStack.push(last.copy());
 
       if (undoStack.isEmpty) {
         tasks = _initialState.toList();
+        _sortTasks();
         notifyObservers();
 
         return;
@@ -215,6 +173,7 @@ class TaskManager {
 
       tasks.clear();
       tasks.addAll(undoStack.peek().state.toList());
+      _sortTasks();
     } else {
       TmMessage.showInfo("Nothing to undo");
     }
@@ -225,7 +184,7 @@ class TaskManager {
   void redo() {
     if (redoStack.isNotEmpty) {
       TaskMemento last = redoStack.pop();
-      undoStack.push(last);
+      undoStack.push(last.copy());
 
       tasks.clear();
       tasks.addAll(last.state.toList());

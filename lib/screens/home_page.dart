@@ -11,27 +11,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> implements TaskObserverInterface {
-  List<TaskInterface> tasks = [];
+  List<TaskInterface> _tasks = [];
+  late TaskManager _taskManager;
 
   @override
   void update(List<TaskInterface> updatedTasks) {
-    tasks = updatedTasks.toList();
+    _tasks = updatedTasks.toList();
 
     setState(() {});
   }
 
   @override
   void initState() {
-    var taskManager = TaskManager();
-    taskManager.addObserver(this);
+    _taskManager = TaskManager();
+    _taskManager.addObserver(this);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    var taskManager = TaskManager();
-    taskManager.removeObserver(this);
+    _taskManager.removeObserver(this);
     super.dispose();
   }
 
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                 IconButton(
                   iconSize: 20.0,
                   onPressed: () {
-                    TaskManager().undo();
+                    _taskManager.undo();
                   },
                   icon: const Icon(Icons.undo),
                 ),
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                 IconButton(
                   iconSize: 20.0,
                   onPressed: () {
-                    TaskManager().redo();
+                    _taskManager.redo();
                   },
                   icon: const Icon(Icons.redo),
                 ),
@@ -67,9 +67,9 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
               iconSize: 20.0,
               onPressed: () => ChangeSortDialog.show(
                 context: context,
-                initialStrategy: TaskManager().sortContext.strategy,
+                initialStrategy: _taskManager.sortContext.strategy,
                 onConfirm: (TaskSortStrategy sortStrategy) {
-                  TaskManager().changeSortStrategy(sortStrategy);
+                  _taskManager.changeSortStrategy(sortStrategy);
                 },
               ),
               icon: const Icon(Icons.settings),
@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Text('You have ${tasks.length} tasks.',
+            Text('You have ${_tasks.length} tasks.',
                 style: ThTextStyles.paragraphP2Medium.copyWith(
                   color: ThColors.textText1,
                   fontWeight: FontWeight.w600,
@@ -90,14 +90,14 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: tasks.length,
+                itemCount: _tasks.length,
                 itemBuilder: (BuildContext context, int index) {
-                  TaskInterface task = tasks[index];
+                  TaskInterface task = _tasks[index];
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
-                        child: Text(tasks[index].toString()),
+                        child: Text(_tasks[index].toString()),
                       ),
                       Row(
                         children: <Widget>[
@@ -105,15 +105,9 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                             title: 'Change deadline',
                             onTap: () => ChangeDeadlineDialog.show(
                               context: context,
-                              initialDeadline: task is DeadlineDecorator ? task.deadline : null,
+                              initialDeadline: task.deadline,
                               onConfirm: (DateTime deadline) {
-                                if (task is DeadlineDecorator) {
-                                  TaskManager().changeDeadlineDecorator(task, deadline);
-
-                                  return;
-                                }
-
-                                TaskManager().applyDeadlineDecorator(task, deadline);
+                                _taskManager.addDeadline(task, deadline);
                               },
                             ),
                             size: ThPrimaryButtonSize.small,
@@ -124,15 +118,9 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                             title: 'Change priority',
                             onTap: () => ChangePriorityDialog.show(
                               context: context,
-                              initialPriority: task is PriorityDecorator ? task.priority : null,
+                              initialPriority: task.priority,
                               onConfirm: (Priority priority) {
-                                if (task is PriorityDecorator) {
-                                  TaskManager().changePriorityDecorator(task, priority);
-
-                                  return;
-                                }
-
-                                TaskManager().applyPriorityDecorator(task, priority);
+                                _taskManager.addPriority(task, priority);
                               },
                             ),
                             size: ThPrimaryButtonSize.small,
@@ -140,11 +128,11 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                           ),
                           const SizedBox(width: 8.0),
                           DropdownMenu<int>(
-                            key: ValueKey<String>(tasks[index].description),
+                            key: ValueKey<String>(_tasks[index].description),
                             enableFilter: false,
                             requestFocusOnTap: true,
                             leadingIcon: const Icon(Icons.search),
-                            initialSelection: tasks[index].state.index,
+                            initialSelection: _tasks[index].state.index,
                             label: const Text('Initial state'),
                             inputDecorationTheme: const InputDecorationTheme(
                               filled: true,
@@ -171,7 +159,7 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                                   return;
                               }
 
-                              TaskManager().changeTaskStatus(tasks[index], state);
+                              _taskManager.changeTaskStatus(_tasks[index], state);
 
                               setState(() {});
                             },
@@ -190,7 +178,7 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                           ),
                           IconButton(
                             onPressed: () {
-                              TaskManager().removeTask(tasks[index]);
+                              _taskManager.removeTask(_tasks[index]);
                             },
                             icon: const Icon(Icons.delete),
                           ),
@@ -211,7 +199,7 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
             return;
           }
 
-          TaskManager().addTask(result);
+          _taskManager.addTask(result);
         },
         tooltip: 'Add Task',
         child: const Icon(Icons.add),

@@ -4,10 +4,10 @@ class PrioritySortStrategy extends TaskSortStrategy {
   @override
   List<TaskInterface> sortTasks(List<TaskInterface> tasks) {
     tasks.sort((a, b) {
-      if (a is PriorityDecorator && b is PriorityDecorator) {
+      if (a.priority != null && b.priority != null) {
         // Compare the two tasks by their state and priority
-        final int priorityAIndex = PriorityMapper.getIndex(a.priority);
-        final int priorityBIndex = PriorityMapper.getIndex(b.priority);
+        final int priorityAIndex = PriorityMapper.getIndex(a.priority!);
+        final int priorityBIndex = PriorityMapper.getIndex(b.priority!);
 
         if (priorityAIndex == priorityBIndex) {
           final int stateAIndex = a.state.index;
@@ -19,7 +19,7 @@ class PrioritySortStrategy extends TaskSortStrategy {
         return -priorityAIndex.compareTo(priorityBIndex);
       }
 
-      if (a is! PriorityDecorator && b is! PriorityDecorator) {
+      if (a.priority == null && b.priority == null) {
         // Compare the two tasks by their state
         final int stateAIndex = a.state.index;
         final int stateBIndex = b.state.index;
@@ -27,11 +27,11 @@ class PrioritySortStrategy extends TaskSortStrategy {
         return stateAIndex.compareTo(stateBIndex);
       }
 
-      if (a is PriorityDecorator) {
+      if (a.priority != null) {
         return -1;
       }
 
-      if (b is PriorityDecorator) {
+      if (b.priority != null) {
         return 1;
       }
 

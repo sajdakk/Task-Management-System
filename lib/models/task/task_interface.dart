@@ -3,6 +3,8 @@ import '../../_project.dart';
 abstract class TaskInterface {
   late String description;
   late TaskState state;
+  late DateTime? deadline;
+  late Priority? priority;
 
   // Method to handle status changes using the current state
   void changeStatus();

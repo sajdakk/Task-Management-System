@@ -70,6 +70,7 @@ class _ChangeSortDialogState extends State<ChangeSortDialog> {
                 _buildTitle(),
                 const SizedBox(height: 16.0),
                 DropdownMenu<String>(
+                  key: ValueKey<String?>(_strategy?.name),
                   enableFilter: false,
                   requestFocusOnTap: true,
                   initialSelection: _strategy?.name,
