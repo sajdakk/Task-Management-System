@@ -97,7 +97,10 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
-                        child: Text(_tasks[index].toString()),
+                        child: Text(
+                          key: ValueKey<String>(_tasks[index].toString()),
+                          _tasks[index].toString(),
+                        ),
                       ),
                       Row(
                         children: <Widget>[
