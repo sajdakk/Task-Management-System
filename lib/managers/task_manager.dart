@@ -133,7 +133,7 @@ class TaskManager {
   void changeSortStrategy(TaskSortStrategy strategy) {
     sortContext.setSortStrategy(strategy);
     _sortTasks();
-    // _saveTasksState();
+    _saveTasksState();
     notifyObservers();
   }
 

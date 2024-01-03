@@ -29,11 +29,11 @@ class PriorityMapper {
 
   static Priority? getPriority(String priority) {
     switch (priority) {
-      case "Low":
+      case "low":
         return Priority.low;
-      case "Medium":
+      case "medium":
         return Priority.medium;
-      case "High":
+      case "high":
         return Priority.high;
       default:
         return null;
