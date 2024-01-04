@@ -1,7 +1,7 @@
 import '../../_project.dart';
 
 abstract class TaskState {
-  void handleStatus(Task task);
+  void changeTaskState(TaskInterface task, TaskState state);
 
   @override
   String toString();

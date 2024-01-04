@@ -6,8 +6,8 @@ import 'package:path/path.dart' as path;
 
 import '../../_project.dart';
 
-class TaskObserver implements TaskObserverInterface {
-  TaskObserver(this.fileName);
+class DatabaseTaskObserver implements TaskObserverInterface {
+  DatabaseTaskObserver(this.fileName);
 
   final String fileName;
 

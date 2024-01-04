@@ -6,9 +6,6 @@ abstract class TaskInterface {
   late DateTime? deadline;
   late Priority? priority;
 
-  // Method to handle status changes using the current state
-  void changeStatus();
-
   // Method to update the state of the task
   void setState(TaskState newState);
 

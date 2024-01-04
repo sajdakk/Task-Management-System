@@ -140,15 +140,6 @@ class TaskManager {
     tasks = sortContext.executeStrategy(tasks);
   }
 
-  String printTasks() {
-    String result = "";
-    for (int i = 0; i < tasks.length; i++) {
-      result += "\n\n$i. ${tasks[i]}";
-    }
-
-    return result;
-  }
-
   void _saveTasksState() {
     var currentSnapshot = TaskMemento("Snapshot", tasks.map((e) => e.copy()).toList());
 

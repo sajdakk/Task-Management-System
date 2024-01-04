@@ -4,4 +4,4 @@ export 'observer/_observer.dart';
 export 'priority/_priority.dart';
 export 'state/_state.dart';
 export '../strategy/_strategy.dart';
-export 'factory/_factory.dart';
+export 'abstract_factory/_factory.dart';

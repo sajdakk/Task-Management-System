@@ -13,10 +13,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> implements TaskObserverInterface {
   List<TaskInterface> _tasks = [];
   late TaskManager _taskManager;
+  List<TextEditingController> _controllers = [];
 
   @override
   void update(List<TaskInterface> updatedTasks) {
     _tasks = updatedTasks.toList();
+    _controllers.clear();
+    for (TaskInterface task in _tasks) {
+      _controllers.add(TextEditingController(text: task.state.toString()));
+    }
 
     setState(() {});
   }
@@ -131,7 +136,8 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                           ),
                           const SizedBox(width: 8.0),
                           DropdownMenu<int>(
-                            key: ValueKey<String>(_tasks[index].description),
+                            key: ValueKey<String>('${_tasks[index].description}.${_tasks[index].state.index}'),
+                            controller: _controllers[index],
                             enableFilter: false,
                             requestFocusOnTap: true,
                             leadingIcon: const Icon(Icons.search),
@@ -162,9 +168,13 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
                                   return;
                               }
 
-                              _taskManager.changeTaskStatus(_tasks[index], state);
-
-                              setState(() {});
+                              try {
+                                _taskManager.changeTaskStatus(_tasks[index], state);
+                                setState(() {});
+                              } catch (e) {
+                                TmMessage.showError(e.toString());
+                                _controllers[index].text = _tasks[index].state.toString();
+                              }
                             },
                             dropdownMenuEntries: <int>[1, 2, 3].map<DropdownMenuEntry<int>>(
                               (int icon) {

@@ -19,17 +19,10 @@ class Task implements TaskInterface {
     this.priority,
   });
 
-  // Method to handle status changes using the current state
-  @override
-  void changeStatus() {
-    state.handleStatus(this);
-  }
-
   // Method to update the state of the task
   @override
   void setState(TaskState newState) {
-    state = newState;
-    changeStatus();
+    state.changeTaskState(this, newState);
   }
 
   @override

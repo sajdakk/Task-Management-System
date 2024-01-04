@@ -2,7 +2,12 @@ import '../../_project.dart';
 
 class ToDoState implements TaskState {
   @override
-  void handleStatus(Task task) {
+  void changeTaskState(TaskInterface task, TaskState state) {
+    if (state is DoneState) {
+      throw Exception("Can't change to this state");
+    }
+
+    task.state = state;
   }
 
   @override

@@ -7,7 +7,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   
   String databaseFile = 'task_management';
-  var observer = TaskObserver(databaseFile);
+  var observer = DatabaseTaskObserver(databaseFile);
   TaskManager().addObserver(observer);
   TaskManager().init(databaseFile);
 
