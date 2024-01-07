@@ -89,7 +89,7 @@ class TaskManager {
     if (updatedTask == null) {
       return;
     }
-    updatedTask = updatedTask.copy();
+    updatedTask = updatedTask.clone();
     updatedTask.priority = priority;
     tasks.remove(task);
     tasks.add(updatedTask);
@@ -104,7 +104,7 @@ class TaskManager {
       return;
     }
 
-    updatedTask = updatedTask.copy();
+    updatedTask = updatedTask.clone();
     updatedTask.deadline = deadline;
     tasks.remove(task);
     tasks.add(updatedTask);
@@ -120,7 +120,7 @@ class TaskManager {
       return;
     }
 
-    updatedTask = updatedTask.copy();
+    updatedTask = updatedTask.clone();
     updatedTask.setState(state);
     tasks.remove(task);
     tasks.add(updatedTask);
@@ -141,7 +141,7 @@ class TaskManager {
   }
 
   void _saveTasksState() {
-    var currentSnapshot = TaskMemento("Snapshot", tasks.map((e) => e.copy()).toList());
+    var currentSnapshot = TaskMemento("Snapshot", tasks.map((e) => e.clone()).toList());
 
     undoStack.push(currentSnapshot.copy());
 

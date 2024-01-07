@@ -9,7 +9,7 @@ abstract class TaskInterface {
   // Method to update the state of the task
   void setState(TaskState newState);
 
-  TaskInterface copy();
+  TaskInterface clone();
 
   @override
   String toString();

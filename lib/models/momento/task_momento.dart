@@ -11,7 +11,7 @@ class TaskMemento {
   TaskMemento copy() {
     return TaskMemento(
       description,
-      state.map((e) => e.copy()).toList(),
+      state.map((e) => e.clone()).toList(),
     );
   }
 }

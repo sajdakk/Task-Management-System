@@ -26,7 +26,7 @@ class Task implements TaskInterface {
   }
 
   @override
-  Task copy() => Task(
+  Task clone() => Task(
         state: state,
         description: description,
         deadline: deadline,

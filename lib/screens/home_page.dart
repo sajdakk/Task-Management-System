@@ -11,9 +11,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> implements TaskObserverInterface {
+  final TaskManager _taskManager = TaskManager();
+  final List<TextEditingController> _controllers = [];
   List<TaskInterface> _tasks = [];
-  late TaskManager _taskManager;
-  List<TextEditingController> _controllers = [];
 
   @override
   void update(List<TaskInterface> updatedTasks) {
@@ -28,8 +28,9 @@ class _HomePageState extends State<HomePage> implements TaskObserverInterface {
 
   @override
   void initState() {
-    _taskManager = TaskManager();
     _taskManager.addObserver(this);
+
+    update(_taskManager.tasks);
 
     super.initState();
   }
