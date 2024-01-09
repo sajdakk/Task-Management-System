@@ -24,7 +24,7 @@ This Dart project is a simple window-based task management application that demo
 - **Strategy Pattern:** Used for sorting tasks based on different strategies.
 - **Observer Pattern:** Allows the observation of changes in tasks, such as saving to a text file.
 - **Prototype Pattern:** Used for creating a copy of a task, allowing for efficient cloning of task instances.
-- **Factory Pattern:** Employed for creating instances of tasks and task-related objects.
+- **Abstract Factory Pattern:** Employed for creating instances of tasks and task-related objects.
 - **State Pattern:** Allows tasks to transition between different states, such as `To Do`, `In Progress`, and `Done`.
 - **Singleton Pattern:** Ensures a single instance of critical components, enhancing efficiency and consistency, such as `TaskManager`.
 
